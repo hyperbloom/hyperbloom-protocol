@@ -149,7 +149,7 @@ following structure with the private key of someone who is already in the Trust
 Network:
 
 - `version` - 1 for now
-- `public key` - trustee's public key
+- `public key` - 32-byte trustee's public key
 - `nonce` - 32-byte nonce
 
 Together signature and this structure make a **Trust Link**:
