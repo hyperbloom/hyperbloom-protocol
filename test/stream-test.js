@@ -3,6 +3,7 @@
 const assert = require('assert');
 const crypto = require('crypto');
 const signatures = require('sodium-signatures');
+const HyperBloomChain = require('hyperbloom-chain');
 
 const protocol = require('../');
 const Stream = protocol.Stream;
@@ -55,5 +56,29 @@ describe('Stream', () => {
     b.pipe(a);
 
     a.request({ start: Buffer.from('a') });
+  });
+
+  it('should send chain', (cb) => {
+    const chain = new HyperBloomChain({ root: publicKey });
+    const bPair = signatures.keyPair();
+
+    const links = [ chain.issueLink({
+      expiration: Infinity,
+      publicKey: bPair.publicKey
+    }, privateKey) ];
+
+    const a = new Stream({ feedKey: publicKey, privateKey, chain: [] });
+    const b = new Stream({
+      feedKey: publicKey,
+      privateKey: bPair.secretKey,
+      chain: links
+    });
+
+    bothSecure(a, b, () => {
+      cb();
+    });
+
+    a.pipe(b);
+    b.pipe(a);
   });
 });
