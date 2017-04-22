@@ -24,8 +24,8 @@ describe('Stream', () => {
   }
 
   it('should handshake', (cb) => {
-    const a = new Stream({ feedKey: publicKey, privateKey });
-    const b = new Stream({ feedKey: publicKey, privateKey });
+    const a = new Stream({ feedKey: publicKey, privateKey, chain: [] });
+    const b = new Stream({ feedKey: publicKey, privateKey, chain: [] });
 
     bothSecure(a, b, cb);
 
@@ -34,8 +34,8 @@ describe('Stream', () => {
   });
 
   it('should send request', (cb) => {
-    const a = new Stream({ feedKey: publicKey, privateKey });
-    const b = new Stream({ feedKey: publicKey, privateKey });
+    const a = new Stream({ feedKey: publicKey, privateKey, chain: [] });
+    const b = new Stream({ feedKey: publicKey, privateKey, chain: [] });
 
     bothSecure(a, b, () => {
       b.on('message', (msg) => {
