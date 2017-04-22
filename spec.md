@@ -191,6 +191,9 @@ Given that everyone subscribed to the HyperCore Ledger know author's public key,
 such Signature Chain can be easily validated by all peers. Trust Links are
 stored in auxiliary structure not covered by this document.
 
+`public key`s SHOULD correspond to the HyperCore ledgers. This way trust
+network may be used to discover new feeds.
+
 NOTE: HyperBloom's owner sends no trust links. The ownership is proven by the
 `signature` in `Handshake` message.
 
