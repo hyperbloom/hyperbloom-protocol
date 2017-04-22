@@ -45,7 +45,7 @@ message Handshake {
 
 - `id` - peer id, MUST be 32 bytes long
 - `extensions` - unspecified, reserved for the future
-- `signature` - MUST be a signature of the Hash (see below) of the other peer's
+- `signature` - MUST be a signature of the Hash (see below) of the remote peer's
   `nonce` from `Open`. The signature MUST be made with the private key
   corresponding to the public key in the last Trust Link in the `chain` (see
   `Signature Chain`), or the feed's private key if the `chain` is empty
@@ -140,6 +140,21 @@ exceed `limit`. `limit` MUST be not zero if present.
 
 NOTE: sort example (in hex encoding) `a0` is less than `a1`, but `a000` and
 `a001` are both greater than `a0`. `a100` is still greater than `a0`.
+
+## 5 Link
+
+```
+message Link {
+  required bytes link  = 1;
+}
+```
+
+SHOULD be sent by peer if its Signature Chain length (`chain.length`) is shorter
+than remote `chain.length - 1`. `link` MUST be a binary encoded Trust Link as
+described below, with minimal expiration date of all in remote Signature Chain.
+
+Upon receipt of this message peer SHOULD construct shorter chain and use it in
+subsequent communication with other peers.
 
 ## Signature Chain
 
