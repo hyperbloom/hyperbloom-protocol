@@ -12,6 +12,8 @@ For `Open`:
 - `varint` length of the protobuf encoding
 - protobuf encoding of `Open`
 
+Unknown messages MUST be ignored.
+
 ## Open
 
 **The only unencrypted message**
@@ -86,7 +88,7 @@ its capabilities.
 After successful validation peer MAY send `Data` messages.
 
 If `limit` is present - the number of sent values for this query SHOULD not
-exceed `limit`.
+exceed `limit`. `limit` MUST be not zero if present.
 
 If `range` is present - only the values between `start` and `end` MUST be
 considered (see `Request` below for description of the range).
@@ -134,7 +136,7 @@ MAY be sent by peer to selectively request values in specified range. Resulting
 equal than `start`.
 
 If `limit` is present - the number of sent values for this query SHOULD not
-exceed `limit`.
+exceed `limit`. `limit` MUST be not zero if present.
 
 NOTE: sort example (in hex encoding) `a0` is less than `a1`, but `a000` and
 `a001` are both greater than `a0`. `a100` is still greater than `a0`.
