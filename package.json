@@ -1,0 +1,21 @@
+{
+  "name": "hyperbloom-protocol",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/protocol.js",
+  "scripts": {
+    "test": "mocha --reporter=spec test/*-test.js"
+  },
+  "keywords": [],
+  "author": "Fedor Indutny <fedor@indutny.com> (http://darksi.de/)",
+  "license": "MIT",
+  "dependencies": {
+    "obuf": "^1.1.1",
+    "protocol-buffers": "^3.2.1",
+    "sodium-universal": "^1.0.0",
+    "varint": "^5.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  }
+}
