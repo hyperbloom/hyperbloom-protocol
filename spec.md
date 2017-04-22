@@ -151,7 +151,7 @@ message Link {
 
 SHOULD be sent by peer if its Signature Chain length (`chain.length`) is shorter
 than remote `chain.length - 1`. `link` MUST be a binary encoded Trust Link as
-described below. Expiration date of the resulting link MUST not be greater than
+described below. Expiration date of the resulting link MUST be equal to
 the minimal of all in remote Signature Chain.
 
 Upon receipt of this message peer SHOULD construct shorter chain and use it in
@@ -191,8 +191,8 @@ Given that everyone subscribed to the HyperCore Ledger know author's public key,
 such Signature Chain can be easily validated by all peers. Trust Links are
 stored in auxiliary structure not covered by this document.
 
-NOTE: HyperCore Ledger's author has just one Trust Link, signing their own
-public key.
+NOTE: HyperBloom's owner sends no trust links. The ownership is proven by the
+`signature` in `Handshake` message.
 
 ## Hash
 
