@@ -183,7 +183,7 @@ public key.
 Something about:
 
 ```js
-sodium.crypto_generichash(out, Buffer.from('hyperbloom'), input);
+sodium.crypto_generichash(out, input, Buffer.from('---hyperbloom---'));
 ```
 
 ## Bloom Filter
