@@ -155,7 +155,7 @@ described below. Expiration date of the resulting link MUST be equal to
 the minimal of all in remote Signature Chain.
 
 Upon receipt of this message peer SHOULD construct shorter chain and use it in
-subsequent communication with other peers until its expiration.
+subsequent communication with other peers.
 
 ## Signature Chain
 
