@@ -150,6 +150,9 @@ Network:
 
 - `version` - 1-byte version, 1 for now
 - `public key` - 32-byte trustee's public key
+- `expiration time` - 8-byte IEEE 754 double floating point value in Big Endian
+  encoding (`buf.writeDoubleBE()` in node.js). Time is specified in seconds
+  since `1970-01-01T00:00:00.000Z`
 - `nonce` - 32-byte nonce
 
 Together signature and this structure make a **Trust Link**:
@@ -157,12 +160,16 @@ Together signature and this structure make a **Trust Link**:
 - `version`
 - `public key`
 - `nonce`
+- `expiration time`
 - `signature`
 
 A `token` (which is used in `Handshake`) consists of **5 Token Links or less**.
 First Trust Link MUST be signed with the HyperCore Ledger's private key. Each
 subsequent Trust Links MUST be signed by the private key corresponding to the
 public key in the previous Trust Link.
+
+Verifier MUST not accept Trust Links with `expiration time` that it less than
+verifier's current time.
 
 Given that everyone subscribed to the HyperCore Ledger know author's public key,
 such Signature Chain can be easily validated by all peers. Trust Links are
