@@ -148,7 +148,7 @@ author. The permissions are given by signing the Hash (see below) of the
 following structure with the private key of someone who is already in the Trust
 Network:
 
-- `version` - 1 for now
+- `version` - 1-byte version, 1 for now
 - `public key` - 32-byte trustee's public key
 - `nonce` - 32-byte nonce
 
