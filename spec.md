@@ -2,12 +2,14 @@
 
 Messages are sent between peers. Each message (except `Open`) consists of:
 
+- `varint` length of the binary header and protobuf encoding to follow
 - binary header (protobuf `varint` encoding of message id)
 - protobuf encoding of the message
 
 For `Open`:
 
 - fixed 4-byte header: `d572c875` (magic value)
+- `varint` length of the protobuf encoding
 - protobuf encoding of `Open`
 
 ## Open
@@ -44,7 +46,7 @@ message Handshake {
 - `signature` - MUST be a signature of the Hash (see below) of the other peer's
   `nonce` from `Open`. The signature MUST be made with the private key
   corresponding to the public key in the last Trust Link in the `chain` (see
-  `Signature Chain`)
+  `Signature Chain`), or the feed's private key if the `chain` is empty
 - `chain` - signature chain with the root verifiable by HyperCore Ledger's
             public key. See `Signature Chain` below
 
@@ -55,11 +57,17 @@ peers.
 
 ```
 message Sync {
+  message Range {
+    required bytes start  = 1;
+    optional bytes end = 2;
+  }
+
   required bytes filter = 1;
   required uint32 size = 2;
   required uint32 n = 3;
   required uint32 seed = 4;
   optional uint32 limit = 5;
+  optional Range range = 6;
 }
 ```
 
@@ -67,6 +75,7 @@ message Sync {
 - `size` - Bloom Filter's bit size
 - `n` - Number of hash functions in Bloom Filter
 - `seed` - seed value for the Bloom Filter's hash function
+- `range` - range of values to which Bloom Filter applies
 
 The Bloom Filter in the message contains all key + value pairs
 currently known to the peer. Upon receipt the peer MUST validate the
@@ -78,6 +87,9 @@ After successful validation peer MAY send `Data` messages.
 
 If `limit` is present - the number of sent values for this query SHOULD not
 exceed `limit`.
+
+If `range` is present - only the values between `start` and `end` MUST be
+considered (see `Request` below for description of the range).
 
 ## 2 FilterOptions
 
@@ -110,7 +122,7 @@ message Data {
 ```
 message Request {
   required bytes start  = 1;
-  required bytes end = 2;
+  optional bytes end = 2;
   optional uint32 limit = 3;
 }
 ```
@@ -118,7 +130,8 @@ message Request {
 MAY be sent by peer to selectively request values in specified range. Resulting
 `Data` message if present SHOULD contain values which are lexicographically
 (byte by byte) greater or equal than `start` and lexicographically less than
-`end`.
+`end`. If `end` is not present - the range applies to all values greater or
+equal than `start`.
 
 If `limit` is present - the number of sent values for this query SHOULD not
 exceed `limit`.
