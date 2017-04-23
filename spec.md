@@ -45,10 +45,11 @@ message Handshake {
 
 - `id` - peer id, MUST be 32 bytes long
 - `extensions` - unspecified, reserved for the future
-- `signature` - MUST be a signature of the Hash (see below) of the remote peer's
-  `nonce` from `Open`. The signature MUST be made with the private key
-  corresponding to the public key in the last Trust Link in the `chain` (see
-  `Signature Chain`), or the feed's private key if the `chain` is empty
+- `signature` - MUST be a signature of the Hash (see below) of concatenated
+   remote and local `nonce` from `Open`. The signature MUST be made with the
+   private key corresponding to the public key in the last Trust Link in the
+   `chain` (see `Signature Chain`), or the feed's private key if the `chain` is
+   empty
 - `chain` - signature chain with the root verifiable by HyperCore Ledger's
             public key. See `Signature Chain` below
 
