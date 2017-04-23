@@ -56,6 +56,10 @@ message Handshake {
 MUST be sent after `Open` and is used to verify trust relationship between
 peers.
 
+NOTE: the hashed input for the `signature` is different between peers. Each peer
+signs `nonce` that it sent plus `nonce` that it received. Each peer verifies
+`nonce` that it received plus `nonce` that it sent.
+
 ## 1 Sync
 
 ```
