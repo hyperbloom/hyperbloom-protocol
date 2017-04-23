@@ -10,8 +10,8 @@
   "author": "Fedor Indutny <fedor@indutny.com> (http://darksi.de/)",
   "license": "MIT",
   "dependencies": {
-    "hyperbloom-chain": "git://github.com/indutny/hyperbloom-chain.git",
-    "hyperbloom-constants": "git://github.com/indutny/hyperbloom-constants.git",
+    "hyperbloom-chain": "git://github.com/hyperbloom/hyperbloom-chain.git",
+    "hyperbloom-constants": "git://github.com/hyperbloom/hyperbloom-constants.git",
     "obuf": "^1.1.1",
     "protocol-buffers": "^3.2.1",
     "sodium-signatures": "^2.0.0",
