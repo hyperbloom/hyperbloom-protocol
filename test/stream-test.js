@@ -7,6 +7,7 @@ const HyperBloomChain = require('hyperbloom-chain');
 
 const protocol = require('../');
 const Stream = protocol.Stream;
+const Parser = protocol.Parser;
 
 describe('Stream', () => {
   const keyPair = signatures.keyPair();
@@ -133,5 +134,28 @@ describe('Stream', () => {
 
     a.pipe(b);
     b.pipe(a);
+  });
+
+  it('should support pre-parse', (cb) => {
+    const a = new Stream({ feedKey: publicKey, privateKey, chain: [] });
+    const preB = new Parser();
+
+    preB.on('open', (open, extra) => {
+      setTimeout(() => {
+        const b = new Stream({
+          feedKey: publicKey,
+          privateKey,
+          chain: [],
+          preparse: { open, extra }
+        });
+
+        bothSecure(a, b, cb);
+
+        b.pipe(a);
+        a.unpipe(preB);
+        a.pipe(b);
+      }, 100);
+    });
+    a.pipe(preB);
   });
 });
