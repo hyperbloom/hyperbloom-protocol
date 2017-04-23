@@ -81,4 +81,57 @@ describe('Stream', () => {
     a.pipe(b);
     b.pipe(a);
   });
+
+  it('should construct shorter chain', (cb) => {
+    const chain = new HyperBloomChain({ root: publicKey });
+
+    function construct(privateKey, expirations) {
+      const links = [];
+      for (let i = 0; i < expirations.length; i++) {
+        const pair = signatures.keyPair();
+
+        const link = chain.issueLink({
+          expiration: expirations[i],
+          publicKey: pair.publicKey
+        }, privateKey);
+        links.push(link);
+
+        privateKey = pair.secretKey;
+      }
+
+      return { privateKey, links };
+    }
+
+    const now = Date.now() / 1000;
+
+    const shared = construct(privateKey, [ now + 5000, now + 4000 ]);
+    const chainA = construct(shared.privateKey, [
+      now + 3000, now + 2000, now + 1000
+    ]);
+    const chainB = construct(shared.privateKey, [ now + 5000 ]);
+
+    chainA.links = shared.links.concat(chainA.links);
+    chainB.links = shared.links.concat(chainB.links);
+
+    const a = new Stream({
+      feedKey: publicKey,
+      privateKey: chainA.privateKey,
+      chain: chainA.links
+    });
+    const b = new Stream({
+      feedKey: publicKey,
+      privateKey: chainB.privateKey,
+      chain: chainB.links
+    });
+
+    bothSecure(a, b, () => {
+      a.on('chain-update', (chain) => {
+        assert.equal(chain.length, 4);
+        cb();
+      });
+    });
+
+    a.pipe(b);
+    b.pipe(a);
+  });
 });

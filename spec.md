@@ -60,7 +60,7 @@ peers.
 ```
 message Sync {
   message Range {
-    required bytes start  = 1;
+    required bytes start = 1;
     optional bytes end = 2;
   }
 
@@ -123,7 +123,7 @@ message Data {
 
 ```
 message Request {
-  required bytes start  = 1;
+  required bytes start = 1;
   optional bytes end = 2;
   optional uint32 limit = 3;
 }
@@ -145,7 +145,7 @@ NOTE: sort example (in hex encoding) `a0` is less than `a1`, but `a000` and
 
 ```
 message Link {
-  required bytes link  = 1;
+  required bytes link = 1;
 }
 ```
 
@@ -154,8 +154,8 @@ than remote `chain.length - 1`. `link` MUST be a binary encoded Trust Link as
 described below. Expiration date of the resulting link MUST be equal to
 the minimal of all in remote Signature Chain.
 
-Upon receipt of this message peer SHOULD construct shorter chain and use it in
-subsequent communication with other peers.
+Upon receipt of this message peer SHOULD verify the `link`, construct shorter
+chain using this `link` and use it in subsequent communication with other peers.
 
 ## Signature Chain
 
