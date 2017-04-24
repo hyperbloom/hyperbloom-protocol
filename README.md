@@ -1,6 +1,43 @@
-# hyperbloom-protocol
+# HyperBloom Protocol
 
-**WORK IN PROGRESS/EXPERIMENTAL**
+Implementation of HyperBloom Protocol. See [specification][0] for protocol
+details.
+
+## Usage
+
+```js
+const Stream = require('hyperbloom-protocol').Stream;
+
+const s = new Stream();
+
+socket.pipe(s);
+s.pipe(socket);
+
+s.on('open', ({ feed }) => {
+});
+
+s.start({
+  feedKey: feedKey,
+  privateKey: privateKey,
+  chain: [ /* trust chain */ ]
+});
+
+s.on('secure', () => {
+  // Send various messages
+  s.request({ start: Buffer.from('a'), end: Buffer.from('z'), limit: 10 });
+  s.sync({ /* bloom filter */ });
+  s.filterOptions({ /* bloom filter options */ });
+  s.data([ Buffer.from('value') ]);
+
+  // Receive messages
+  s.on('message', (message) => {
+    console.log(message.type, message.body);
+  });
+
+  // Destroy stream
+  s.destroy();
+});
+```
 
 ## LICENSE
 
@@ -26,3 +63,5 @@ NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[0]: https://github.com/hyperbloom/hyperbloom-protocol/blob/master/spec.md
