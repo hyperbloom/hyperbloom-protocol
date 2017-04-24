@@ -1,18 +1,22 @@
 {
   "name": "hyperbloom-protocol",
   "version": "1.0.0",
-  "description": "",
+  "description": "HyperBloom protocol implementation",
   "main": "lib/protocol.js",
   "scripts": {
     "test": "mocha --reporter=spec test/*-test.js"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hyperbloom/hyperbloom-protocol.git"
+  },
+  "keywords": [ "hyperbloom", "protocol" ],
   "author": "Fedor Indutny <fedor@indutny.com> (http://darksi.de/)",
   "license": "MIT",
   "dependencies": {
     "debug": "^2.6.4",
-    "hyperbloom-chain": "git://github.com/hyperbloom/hyperbloom-chain.git",
-    "hyperbloom-constants": "git://github.com/hyperbloom/hyperbloom-constants.git",
+    "hyperbloom-chain": "^1.0.0",
+    "hyperbloom-constants": "^1.0.0",
     "obuf": "^1.1.1",
     "protocol-buffers": "^3.2.1",
     "sodium-signatures": "^2.0.0",
