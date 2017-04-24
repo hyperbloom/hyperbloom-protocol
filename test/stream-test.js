@@ -26,18 +26,21 @@ describe('Stream', () => {
   }
 
   it('should handshake', (cb) => {
-    const a = new Stream({ feedKey: publicKey, privateKey, chain: [] });
-    const b = new Stream({ feedKey: publicKey, privateKey, chain: [] });
+    const a = new Stream();
+    const b = new Stream();
 
     bothSecure(a, b, cb);
 
     a.pipe(b);
     b.pipe(a);
+
+    a.start({ feedKey: publicKey, privateKey, chain: [] });
+    b.start({ feedKey: publicKey, privateKey, chain: [] });
   });
 
   it('should send request', (cb) => {
-    const a = new Stream({ feedKey: publicKey, privateKey, chain: [] });
-    const b = new Stream({ feedKey: publicKey, privateKey, chain: [] });
+    const a = new Stream();
+    const b = new Stream();
 
     bothSecure(a, b, () => {
       b.on('message', (msg) => {
@@ -56,6 +59,8 @@ describe('Stream', () => {
     a.pipe(b);
     b.pipe(a);
 
+    a.start({ feedKey: publicKey, privateKey, chain: [] });
+    b.start({ feedKey: publicKey, privateKey, chain: [] });
     a.request({ start: Buffer.from('a') });
   });
 
@@ -68,12 +73,8 @@ describe('Stream', () => {
       publicKey: bPair.publicKey
     }, privateKey) ];
 
-    const a = new Stream({ feedKey: publicKey, privateKey, chain: [] });
-    const b = new Stream({
-      feedKey: publicKey,
-      privateKey: bPair.secretKey,
-      chain: links
-    });
+    const a = new Stream();
+    const b = new Stream();
 
     bothSecure(a, b, () => {
       cb();
@@ -81,6 +82,13 @@ describe('Stream', () => {
 
     a.pipe(b);
     b.pipe(a);
+
+    a.start({ feedKey: publicKey, privateKey, chain: [] });
+    b.start({
+      feedKey: publicKey,
+      privateKey: bPair.secretKey,
+      chain: links
+    });
   });
 
   it('should construct shorter chain', (cb) => {
@@ -114,16 +122,8 @@ describe('Stream', () => {
     chainA.links = shared.links.concat(chainA.links);
     chainB.links = shared.links.concat(chainB.links);
 
-    const a = new Stream({
-      feedKey: publicKey,
-      privateKey: chainA.privateKey,
-      chain: chainA.links
-    });
-    const b = new Stream({
-      feedKey: publicKey,
-      privateKey: chainB.privateKey,
-      chain: chainB.links
-    });
+    const a = new Stream();
+    const b = new Stream();
 
     bothSecure(a, b, () => {
       a.on('chain-update', (chain) => {
@@ -134,28 +134,36 @@ describe('Stream', () => {
 
     a.pipe(b);
     b.pipe(a);
+
+    a.start({
+      feedKey: publicKey,
+      privateKey: chainA.privateKey,
+      chain: chainA.links
+    });
+    b.start({
+      feedKey: publicKey,
+      privateKey: chainB.privateKey,
+      chain: chainB.links
+    });
   });
 
-  it('should support pre-parse', (cb) => {
-    const a = new Stream({ feedKey: publicKey, privateKey, chain: [] });
-    const preB = new Parser();
+  it('should support asynchronous start', (cb) => {
+    const a = new Stream();
+    a.start({ feedKey: publicKey, privateKey, chain: [] });
+    const b = new Stream();
 
-    preB.on('open', (open, extra) => {
+    b.on('open', (open) => {
       setTimeout(() => {
-        const b = new Stream({
+        b.start({
           feedKey: publicKey,
           privateKey,
-          chain: [],
-          preparse: { open, extra }
+          chain: []
         });
 
         bothSecure(a, b, cb);
-
-        b.pipe(a);
-        a.unpipe(preB);
-        a.pipe(b);
       }, 100);
     });
-    a.pipe(preB);
+    a.pipe(b);
+    b.pipe(a);
   });
 });
