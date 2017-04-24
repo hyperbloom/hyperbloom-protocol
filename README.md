@@ -39,6 +39,10 @@ s.on('secure', () => {
 });
 ```
 
+## Chain
+
+See [hyperbloom-trust][1] and [hyperbloom-chain][2].
+
 ## LICENSE
 
 This software is licensed under the MIT License.
@@ -65,3 +69,5 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [0]: https://github.com/hyperbloom/hyperbloom-protocol/blob/master/spec.md
+[1]: https://github.com/hyperbloom/hyperbloom-trust
+[2]: https://github.com/hyperbloom/hyperbloom-chain
