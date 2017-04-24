@@ -1,6 +1,6 @@
 {
   "name": "hyperbloom-protocol",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "HyperBloom protocol implementation",
   "main": "lib/protocol.js",
   "scripts": {
@@ -10,7 +10,10 @@
     "type": "git",
     "url": "git://github.com/hyperbloom/hyperbloom-protocol.git"
   },
-  "keywords": [ "hyperbloom", "protocol" ],
+  "keywords": [
+    "hyperbloom",
+    "protocol"
+  ],
   "author": "Fedor Indutny <fedor@indutny.com> (http://darksi.de/)",
   "license": "MIT",
   "dependencies": {
