@@ -42,6 +42,12 @@ describe('Stream', () => {
     const a = new Stream();
     const b = new Stream();
 
+    let waiting = 2;
+    const done = () => {
+      if (--waiting === 0)
+        return cb();
+    };
+
     bothSecure(a, b, () => {
       b.on('message', (msg) => {
         assert.deepEqual(msg, {
@@ -52,7 +58,7 @@ describe('Stream', () => {
             limit: 0
           }
         });
-        cb();
+        done();
       });
     });
 
@@ -61,7 +67,7 @@ describe('Stream', () => {
 
     a.start({ feedKey: publicKey, privateKey, chain: [] });
     b.start({ feedKey: publicKey, privateKey, chain: [] });
-    a.request({ start: Buffer.from('a') });
+    a.request({ start: Buffer.from('a') }, done);
   });
 
   it('should send chain', (cb) => {

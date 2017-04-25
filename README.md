@@ -27,7 +27,7 @@ s.on('secure', () => {
   s.request({ start: Buffer.from('a'), end: Buffer.from('z'), limit: 10 });
   s.sync({ /* bloom filter */ });
   s.filterOptions({ /* bloom filter options */ });
-  s.data([ Buffer.from('value') ]);
+  s.data([ Buffer.from('value') ], () => {});
 
   // Receive messages
   s.on('message', (message) => {
