@@ -1,6 +1,6 @@
 {
   "name": "hyperbloom-protocol",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "HyperBloom protocol implementation",
   "main": "lib/protocol.js",
   "scripts": {
