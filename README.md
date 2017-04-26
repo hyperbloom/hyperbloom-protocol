@@ -19,7 +19,11 @@ s.on('open', ({ feed }) => {
 s.start({
   feedKey: feedKey,
   privateKey: privateKey,
-  chain: [ /* trust chain */ ]
+  chain: [ /* trust chain */ ],
+
+  // If `false` - the trust links won't be issued automatically, when
+  // we have shorter chain than the other peer. Use with care!
+  issueLinks: true
 });
 
 s.on('secure', () => {

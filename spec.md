@@ -154,13 +154,16 @@ message Link {
 }
 ```
 
-SHOULD be sent by peer if its Signature Chain length (`chain.length`) is shorter
+MAY be sent by peer if its Signature Chain length (`chain.length`) is shorter
 than remote `chain.length - 1`. `link` MUST be a binary encoded Trust Link as
 described below. Expiration date of the resulting link MUST be equal to
 the minimal of all in remote Signature Chain.
 
 Upon receipt of this message peer SHOULD verify the `link`, construct shorter
 chain using this `link` and use it in subsequent communication with other peers.
+
+NOTE: This is optional for implementations. If disabled - system will be less
+viral, but spam control will be easier.
 
 ## Signature Chain
 

@@ -9,6 +9,23 @@ const protocol = require('../');
 const Stream = protocol.Stream;
 const Parser = protocol.Parser;
 
+function construct(chain, privateKey, expirations) {
+  const links = [];
+  for (let i = 0; i < expirations.length; i++) {
+    const pair = signatures.keyPair();
+
+    const link = chain.issueLink({
+      expiration: expirations[i],
+      publicKey: pair.publicKey
+    }, privateKey);
+    links.push(link);
+
+    privateKey = pair.secretKey;
+  }
+
+  return { privateKey, links };
+}
+
 describe('Stream', () => {
   const keyPair = signatures.keyPair();
   const privateKey = keyPair.secretKey;
@@ -100,30 +117,13 @@ describe('Stream', () => {
   it('should construct shorter chain', (cb) => {
     const chain = new HyperBloomChain({ root: publicKey });
 
-    function construct(privateKey, expirations) {
-      const links = [];
-      for (let i = 0; i < expirations.length; i++) {
-        const pair = signatures.keyPair();
-
-        const link = chain.issueLink({
-          expiration: expirations[i],
-          publicKey: pair.publicKey
-        }, privateKey);
-        links.push(link);
-
-        privateKey = pair.secretKey;
-      }
-
-      return { privateKey, links };
-    }
-
     const now = Date.now() / 1000;
 
-    const shared = construct(privateKey, [ now + 5000, now + 4000 ]);
-    const chainA = construct(shared.privateKey, [
+    const shared = construct(chain, privateKey, [ now + 5000, now + 4000 ]);
+    const chainA = construct(chain, shared.privateKey, [
       now + 3000, now + 2000, now + 1000
     ]);
-    const chainB = construct(shared.privateKey, [ now + 5000 ]);
+    const chainB = construct(chain, shared.privateKey, [ now + 5000 ]);
 
     chainA.links = shared.links.concat(chainA.links);
     chainB.links = shared.links.concat(chainB.links);
@@ -150,6 +150,47 @@ describe('Stream', () => {
       feedKey: publicKey,
       privateKey: chainB.privateKey,
       chain: chainB.links
+    });
+  });
+
+  it('should not construct shorter chain if disabled', (cb) => {
+    const chain = new HyperBloomChain({ root: publicKey });
+
+    const now = Date.now() / 1000;
+
+    const shared = construct(chain, privateKey, [ now + 5000, now + 4000 ]);
+    const chainA = construct(chain, shared.privateKey, [
+      now + 3000, now + 2000, now + 1000
+    ]);
+    const chainB = construct(chain, shared.privateKey, [ now + 5000 ]);
+
+    chainA.links = shared.links.concat(chainA.links);
+    chainB.links = shared.links.concat(chainB.links);
+
+    const a = new Stream();
+    const b = new Stream();
+
+    bothSecure(a, b, () => {
+      a.on('chain-update', (chain) => {
+        assert(false);
+      });
+      setTimeout(cb, 100);
+    });
+
+    a.pipe(b);
+    b.pipe(a);
+
+    a.start({
+      feedKey: publicKey,
+      privateKey: chainA.privateKey,
+      chain: chainA.links
+    });
+    b.start({
+      feedKey: publicKey,
+      privateKey: chainB.privateKey,
+      chain: chainB.links,
+
+      issueLinks: false
     });
   });
 
