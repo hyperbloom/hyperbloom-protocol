@@ -118,11 +118,26 @@ values.
 ```
 message Data {
   repeated bytes values = 1;
+  required bytes signature = 1;
 }
 ```
 
 - `values` - list of byte arrays, MUST not be empty. `values` MUST not contain
-   duplicates. Each element of the list MUST not be empty.
+   duplicates. Each element of the list MUST not be empty
+- `signature` - a signature of serialized values (described below) made with
+  remote peer's public key.
+
+Serialization format for `signature`:
+
+```
+[ 64-bit Big Endian number of values ]
+[ value 0 ]
+[ ...     ]
+[ last value ]
+```
+
+Upon receipt of this message peer MUST validate `signature` and SHOULD accept
+values only if the `signature` is valid.
 
 ## 4 Request
 
