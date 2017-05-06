@@ -130,6 +130,7 @@ message Data {
 Serialization format for `signature`:
 
 ```
+[ 32-byte feed public key ]
 [ 64-bit Big Endian number of values ]
 [ value 0 ]
 [ ...     ]
