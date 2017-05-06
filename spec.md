@@ -221,6 +221,9 @@ network may be used to discover new feeds.
 NOTE: HyperBloom's owner sends no trust links. The ownership is proven by the
 `signature` in `Handshake` message.
 
+NOTE: Links are to be distributed through some other protocol or even by
+handing them in-person.
+
 ## Hash
 
 Something about:
